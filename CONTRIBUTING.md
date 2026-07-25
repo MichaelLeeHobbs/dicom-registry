@@ -12,7 +12,12 @@ pnpm run format:check  # prettier
 pnpm run build         # tsdown -> ESM + CJS + DTS
 ```
 
-All of the above must pass before a PR is mergeable; CI runs the same set on Node 20, 22 and 24.
+All of the above must pass before a PR is mergeable.
+
+**Two different Node floors, on purpose.** The library supports Node >= 20.16 (`engines`) and CI runs
+the test suite on 20, 22 and 24 to prove it. The _build toolchain_ needs Node >= 22 — tsdown/rolldown
+calls `Promise.withResolvers`, which does not exist on Node 20 — so `pnpm run build` runs once, on
+Node 24. Building the same sources on three Node versions would verify the bundler, not the library.
 
 ## Ground rules
 

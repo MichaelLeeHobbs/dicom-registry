@@ -7,6 +7,12 @@ on:
         branches: [master]
 
 jobs:
+    # The matrix verifies the LIBRARY on every Node version we support for
+    # consumers (engines: >=20.16). It deliberately does not build: tsdown
+    # (rolldown) needs Promise.withResolvers, which is Node 22+, so the build
+    # toolchain has a higher floor than the published artifact. Building the
+    # same sources three times would verify the bundler, not the library — the
+    # artifact is built once, in the lint job, on Node 24.
     test:
         name: Test (Node ${{ matrix.node-version }})
         runs-on: ubuntu-latest
@@ -22,7 +28,6 @@ jobs:
                   cache: pnpm
             - run: pnpm install --frozen-lockfile
             - run: pnpm run test:coverage
-            - run: pnpm run build
 
     lint:
         name: Lint & Typecheck
