@@ -76,6 +76,7 @@
         "typecheck": "node node_modules/ts7/bin/tsc --noEmit",
         "typecheck:ts6": "tsc --noEmit",
         "sources:fetch": "node scripts/fetch-sources.mjs",
+        "sources:check": "node scripts/fetch-sources.mjs --check",
         "data:build": "node scripts/build-data.mjs",
         "data:diff": "node scripts/diff-data.mjs",
         "dry-run": "npm pack --dry-run",

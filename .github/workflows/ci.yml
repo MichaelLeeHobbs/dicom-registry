@@ -40,6 +40,10 @@ jobs:
                   node-version: 24
                   cache: pnpm
             - run: pnpm install --frozen-lockfile
+            # Offline: hashes the committed vendored inputs against the digests
+            # recorded in sources/SOURCES.json. Catches a tampered or partially
+            # updated vendor tree before any dataset is generated from it.
+            - run: pnpm run sources:check
             - run: pnpm run format:check
             - run: pnpm run lint
             - run: pnpm run typecheck

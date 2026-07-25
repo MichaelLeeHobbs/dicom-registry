@@ -1,0 +1,90 @@
+{
+    "$comment": "Pinned build-time inputs. Every dataset this package emits is derived from exactly these revisions; nothing here is redistributed verbatim in the published artifact. Update with: pnpm run sources:fetch -- --update, which is deliberately its own PR (see CONTRIBUTING).",
+    "schemaVersion": 1,
+    "sources": {
+        "dcmtk": {
+            "repo": "DCMTK/dcmtk",
+            "homepage": "https://github.com/DCMTK/dcmtk",
+            "ref": "DCMTK-3.7.0",
+            "sha": "ccfd10b84ff3c9a40b7b331698aedf06d421fc43",
+            "commitDate": "2025-12-15T07:28:13Z",
+            "license": "BSD-style (OFFIS)",
+            "licenseFile": "COPYRIGHT",
+            "why": "Pinned to a release tag rather than master: a tagged DCMTK is tested as a unit by OFFIS and is meaningful to a human reading provenance, where a floating SHA is not.",
+            "files": [
+                {
+                    "path": "dcmdata/data/dicom.dic",
+                    "local": "dicom.dic",
+                    "sha256": "87b2428cfc20017276401b86086e1b9f0ae127c42c63f5ba5dcc123fda45b129",
+                    "use": "attributes, repeating-group ranges, DCMTK pseudo-VRs"
+                },
+                {
+                    "path": "dcmdata/data/private.dic",
+                    "local": "private.dic",
+                    "sha256": "ab0e0823ac0a6db8415bc7b5316814b47e8b9820879897945da9a6769c3da71c",
+                    "use": "private tag dictionary"
+                },
+                {
+                    "path": "dcmdata/libsrc/dcuid.cc",
+                    "local": "dcuid.cc",
+                    "sha256": "18309a09b0f73e15cca1c54d59ce9eeeb5ef4b72fb1c2dea0e16d6d28132d541",
+                    "use": "uidNameMap[]: UIDs, keywords, DCMTK aliases, SOP class categories"
+                },
+                {
+                    "path": "dcmdata/libsrc/dcxfer.cc",
+                    "local": "dcxfer.cc",
+                    "sha256": "00851e69ba0a66752f64e7209ccdf6084617c9ef74f02b8f0fb7feb392862985",
+                    "use": "XferNames[]: transfer syntax properties"
+                },
+                {
+                    "path": "dcmdata/include/dcmtk/dcmdata/dcuid.h",
+                    "local": "dcuid.h",
+                    "sha256": "dea44c408504d3b29d02bef9553265e8ef919faa62591dcb51858941c617320b",
+                    "use": "REQUIRED: dcuid.cc references UIDs by macro (UID_CTImageStorage), and the literals live here. Also supplies the DcmUIDProperties struct/enum declarations used to map fields by name rather than by position."
+                },
+                {
+                    "path": "dcmdata/include/dcmtk/dcmdata/dcxfer.h",
+                    "local": "dcxfer.h",
+                    "sha256": "8396253f79c1833d5967d245ca49ce1ec1d7e2033cbaa5bfb263a682fc9f053f",
+                    "use": "REQUIRED: E_TransferSyntax and the property enums declared for XferNames[]"
+                },
+                {
+                    "path": "COPYRIGHT",
+                    "local": "COPYRIGHT",
+                    "sha256": "1a14d2c490c5ecb4d1af6ab1e8ef8b3a06016659bdbd9304c4cb67d8de8edca5",
+                    "use": "licence text shipped alongside the vendored inputs"
+                }
+            ]
+        },
+        "innolitics": {
+            "repo": "innolitics/dicom-standard",
+            "homepage": "https://github.com/innolitics/dicom-standard",
+            "ref": "master",
+            "sha": "90571bcc4e46b08bc815bd683e6c466308bcff9a",
+            "commitDate": "2026-04-17T13:04:17Z",
+            "license": "MIT",
+            "licenseFile": "LICENSE.txt",
+            "why": "No release tags upstream — the project regenerates from the published Standard on a schedule — so a commit SHA is the only reproducible pin.",
+            "files": [
+                {
+                    "path": "standard/attributes.json",
+                    "local": "attributes.json",
+                    "sha256": "acc170c9646bf497e7c90dca904472f7eb673c9038c6198a92f82c66a9c74e5c",
+                    "use": "official PS3.6 keywords and VR/VM, with ambiguous VRs ('US or SS') preserved"
+                },
+                {
+                    "path": "standard/confidentiality_profile_attributes.json",
+                    "local": "confidentiality_profile_attributes.json",
+                    "sha256": "a99a35d1278e2bace8d90ff791b11aea2d45f1e3e1230388eb5224c9dbcd29e6",
+                    "use": "PS3.15 Annex E de-identification action codes"
+                },
+                {
+                    "path": "LICENSE.txt",
+                    "local": "LICENSE.txt",
+                    "sha256": "05b30d3f54cdd49abd3bd5efbb7f0af3a31fac4b1f39d066d249e8b5ca454aa8",
+                    "use": "licence text shipped alongside the vendored inputs"
+                }
+            ]
+        }
+    }
+}

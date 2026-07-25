@@ -46,5 +46,5 @@ Used as a build-time input for: the attribute registry (`standard/attributes.jso
 and the PS3.15 Annex E confidentiality profile
 (`standard/confidentiality_profile_attributes.json`).
 
-The MIT licence text is reproduced in `sources/innolitics/LICENSE` alongside the
+The MIT licence text is reproduced in `sources/innolitics/LICENSE.txt` alongside the
 vendored inputs.
