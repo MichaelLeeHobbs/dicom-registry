@@ -42,9 +42,11 @@ export default tseslint.config(
             'docs-site/**',
             'examples/**',
             'node_modules/**',
-            // vendored upstream inputs (C++/dic/json) and emitted JSON artifacts
+            // vendored upstream inputs (C++/dic/json) and emitted artifacts; the
+            // generator owns the layout of src/generated (see .prettierignore)
             'sources/**',
             'data/**',
+            'src/generated/**',
             '*.config.*',
             'eslint.config.mjs',
             'scripts/**/*.mjs',

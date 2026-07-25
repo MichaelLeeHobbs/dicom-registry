@@ -8,5 +8,11 @@ pnpm-lock.yaml
 # provenance diff stays meaningful — never reformat them.
 sources/
 
-# Generated JSON artifacts (emitted by scripts/build-data.mjs, not hand-edited).
+# Generated artifacts (emitted by scripts/build-data.mjs, not hand-edited).
+#
+# Deliberately unformatted: `data:check` proves the committed output is
+# byte-identical to a fresh build, so a formatter rewriting it afterwards would
+# put the two gates permanently at odds. The generator owns their layout;
+# `typecheck` still covers them, which is the part that catches real defects.
 data/
+src/generated/

@@ -61,6 +61,16 @@
                 "default": "./dist/tag.cjs"
             }
         },
+        "./uid": {
+            "import": {
+                "types": "./dist/uid.d.ts",
+                "default": "./dist/uid.js"
+            },
+            "require": {
+                "types": "./dist/uid.d.cts",
+                "default": "./dist/uid.cjs"
+            }
+        },
         "./package.json": "./package.json"
     },
     "scripts": {
@@ -78,11 +88,11 @@
         "sources:fetch": "node scripts/fetch-sources.mjs",
         "sources:check": "node scripts/fetch-sources.mjs --check",
         "data:build": "node scripts/build-data.mjs",
-        "data:diff": "node scripts/diff-data.mjs",
+        "data:check": "node scripts/build-data.mjs --check",
         "dry-run": "npm pack --dry-run",
         "attw": "attw --pack . --profile node16",
         "docs": "typedoc",
-        "prepublishOnly": "pnpm run clean && pnpm run lint && pnpm run typecheck && pnpm run data:diff && pnpm run test:coverage && pnpm run build && pnpm run attw"
+        "prepublishOnly": "pnpm run clean && pnpm run lint && pnpm run typecheck && pnpm run sources:check && pnpm run data:check && pnpm run test:coverage && pnpm run build && pnpm run attw"
     },
     "devDependencies": {
         "@arethetypeswrong/cli": "^0.18.5",

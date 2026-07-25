@@ -7,6 +7,7 @@ export default defineConfig({
     entry: {
         index: 'src/index.ts',
         tag: 'src/tag.ts',
+        uid: 'src/uid.ts',
     },
     tsconfig: 'tsconfig.build.json',
     format: ['esm', 'cjs'],

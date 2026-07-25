@@ -1,0 +1,51 @@
+{
+    "$comment": "Floors and anchors for the generated datasets. A degraded parse of a hand-maintained C++ table almost always yields FEWER rows or drops a column, so these guard the failure mode that a diff review would rationalize away. Raise the floors deliberately when an upstream bump genuinely adds entries; never lower one to make a build pass.",
+    "uids": {
+        "minCount": 450,
+        "requiredKeywords": [
+            "Verification",
+            "ImplicitVRLittleEndian",
+            "ExplicitVRLittleEndian",
+            "ExplicitVRBigEndian",
+            "DeflatedExplicitVRLittleEndian",
+            "JPEGBaseline8Bit",
+            "JPEG2000Lossless",
+            "RLELossless",
+            "CTImageStorage",
+            "MRImageStorage",
+            "UltrasoundImageStorage",
+            "ComputedRadiographyImageStorage",
+            "SecondaryCaptureImageStorage",
+            "BasicTextSRStorage",
+            "EnhancedSRStorage",
+            "Comprehensive3DSRStorage",
+            "EncapsulatedPDFStorage",
+            "SegmentationStorage",
+            "RTPlanStorage",
+            "GrayscaleSoftcopyPresentationStateStorage",
+            "TwelveLeadECGWaveformStorage",
+            "PatientRootQueryRetrieveInformationModelFind",
+            "StudyRootQueryRetrieveInformationModelMove",
+            "ModalityWorklistInformationModelFind",
+            "StorageCommitmentPushModel",
+            "DICOMApplicationContext"
+        ]
+    },
+    "transferSyntaxes": {
+        "minCount": 50,
+        "requiredUids": [
+            "1.2.840.10008.1.2",
+            "1.2.840.10008.1.2.1",
+            "1.2.840.10008.1.2.1.99",
+            "1.2.840.10008.1.2.2",
+            "1.2.840.10008.1.2.5",
+            "1.2.840.10008.1.2.4.50",
+            "1.2.840.10008.1.2.4.51",
+            "1.2.840.10008.1.2.4.57",
+            "1.2.840.10008.1.2.4.70",
+            "1.2.840.10008.1.2.4.80",
+            "1.2.840.10008.1.2.4.90",
+            "1.2.840.10008.1.2.4.91"
+        ]
+    }
+}
