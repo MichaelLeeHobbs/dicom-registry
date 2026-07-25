@@ -28,7 +28,15 @@
       "UID registry lists transfer syntax 1.2.840.10008.1.2.7.2 (SMPTEST211020UncompressedInterlacedActiveVideo) with no XferNames properties row",
       "UID registry lists transfer syntax 1.2.840.10008.1.2.7.3 (SMPTEST211030PCMDigitalAudio) with no XferNames properties row",
       "UID registry lists transfer syntax 1.2.840.10008.1.2.6.1 (RFC2557MIMEEncapsulation) with no XferNames properties row",
-      "UID registry lists transfer syntax 1.2.840.10008.1.2.6.2 (XMLEncoding) with no XferNames properties row"
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.6.2 (XMLEncoding) with no XferNames properties row",
+      "PS3.6 lists (0008,0202) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0018,0061) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0018,9445) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0028,0020) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0400,0315) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (300A,0782) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "attributes: 5123 rows in both sources, 220 only in dicom.dic, 6 only in PS3.6",
+      "attributes: 93 field-level disagreements between the sources, shipped as the divergences dataset"
     ]
   },
   "count": 478,

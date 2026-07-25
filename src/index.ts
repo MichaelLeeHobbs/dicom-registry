@@ -35,7 +35,9 @@ export {
     tryToTag,
     type Tag,
     type TagLike,
-    type Parity,
     type TagRange,
 } from './tag';
 export * from './uid';
+export * from './vm';
+export * from './vr';
+export * from './attributes';

@@ -1,0 +1,789 @@
+{
+  "schemaVersion": 1,
+  "dataset": "divergences",
+  "provenance": {
+    "registryVersion": "0.1.0-alpha.0",
+    "dicomEdition": "2025e",
+    "generatedAt": "2026-04-17T13:04:17Z",
+    "sources": [
+      {
+        "key": "dcmtk",
+        "repo": "DCMTK/dcmtk",
+        "ref": "DCMTK-3.7.0",
+        "sha": "ccfd10b84ff3c9a40b7b331698aedf06d421fc43",
+        "commitDate": "2025-12-15T07:28:13Z"
+      },
+      {
+        "key": "innolitics",
+        "repo": "innolitics/dicom-standard",
+        "ref": "master",
+        "sha": "90571bcc4e46b08bc815bd683e6c466308bcff9a",
+        "commitDate": "2026-04-17T13:04:17Z"
+      }
+    ],
+    "notes": [
+      "dcxfer.cc parsed with WITH_ZLIB defined, so the deflated syntax reports streamCompression 'deflate' rather than 'unsupported'",
+      "XferNames entry 'Virtual Big Endian Implicit' has no UID (DCMTK-internal); omitted from the dataset",
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.7.1 (SMPTEST211020UncompressedProgressiveActiveVideo) with no XferNames properties row",
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.7.2 (SMPTEST211020UncompressedInterlacedActiveVideo) with no XferNames properties row",
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.7.3 (SMPTEST211030PCMDigitalAudio) with no XferNames properties row",
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.6.1 (RFC2557MIMEEncapsulation) with no XferNames properties row",
+      "UID registry lists transfer syntax 1.2.840.10008.1.2.6.2 (XMLEncoding) with no XferNames properties row",
+      "PS3.6 lists (0008,0202) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0018,0061) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0018,9445) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0028,0020) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (0400,0315) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "PS3.6 lists (300A,0782) with no keyword, name, VR or VM; kept as an undefined retired entry",
+      "attributes: 5123 rows in both sources, 220 only in dicom.dic, 6 only in PS3.6",
+      "attributes: 93 field-level disagreements between the sources, shipped as the divergences dataset"
+    ]
+  },
+  "count": 93,
+  "entries": [
+    {
+      "tag": "(0010,2160)",
+      "keyword": "EthnicGroup",
+      "field": "retired",
+      "dcmtk": "true",
+      "innolitics": "false",
+      "note": null
+    },
+    {
+      "tag": "(0020,31XX)",
+      "keyword": "SourceImageIDs",
+      "field": "tag",
+      "dcmtk": "(0020,3100-31FF)",
+      "innolitics": "(0020,31XX)",
+      "note": "DICOM has no element parity rule; DCMTK even-only is a notation artifact; PS3.6 used"
+    },
+    {
+      "tag": "(0028,04X0)",
+      "keyword": "RowsForNthOrderCoefficients",
+      "field": "tag",
+      "dcmtk": "(0028,0410)",
+      "innolitics": "(0028,04X0)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,04X1)",
+      "keyword": "ColumnsForNthOrderCoefficients",
+      "field": "tag",
+      "dcmtk": "(0028,0411)",
+      "innolitics": "(0028,04X1)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,04X2)",
+      "keyword": "CoefficientCoding",
+      "field": "tag",
+      "dcmtk": "(0028,0412)",
+      "innolitics": "(0028,04X2)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,04X3)",
+      "keyword": "CoefficientCodingPointers",
+      "field": "tag",
+      "dcmtk": "(0028,0413)",
+      "innolitics": "(0028,04X3)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,08X0)",
+      "keyword": "CodeLabel",
+      "field": "tag",
+      "dcmtk": "(0028,0800)",
+      "innolitics": "(0028,08X0)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,08X2)",
+      "keyword": "NumberOfTables",
+      "field": "tag",
+      "dcmtk": "(0028,0802)",
+      "innolitics": "(0028,08X2)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,08X3)",
+      "keyword": "CodeTableLocation",
+      "field": "tag",
+      "dcmtk": "(0028,0803)",
+      "innolitics": "(0028,08X3)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,08X4)",
+      "keyword": "BitsForCodeWord",
+      "field": "tag",
+      "dcmtk": "(0028,0804)",
+      "innolitics": "(0028,08X4)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,08X8)",
+      "keyword": "ImageDataLocation",
+      "field": "tag",
+      "dcmtk": "(0028,0808)",
+      "innolitics": "(0028,08X8)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(0028,1200)",
+      "keyword": "GrayLookupTableData",
+      "field": "vm",
+      "dcmtk": "1-n",
+      "innolitics": "1-n or 1",
+      "note": "DCMTK has no notation for a VM that depends on the VR in use"
+    },
+    {
+      "tag": "(0028,3006)",
+      "keyword": "LUTData",
+      "field": "vr",
+      "dcmtk": "US,SS,OW",
+      "innolitics": "US,OW",
+      "note": "DCMTK code 'lt'"
+    },
+    {
+      "tag": "(0028,3006)",
+      "keyword": "LUTData",
+      "field": "vm",
+      "dcmtk": "1-n",
+      "innolitics": "1-n or 1",
+      "note": "DCMTK has no notation for a VM that depends on the VR in use"
+    },
+    {
+      "tag": "(1000,XXX0)",
+      "keyword": "EscapeTriplet",
+      "field": "tag",
+      "dcmtk": "(1000,0010)",
+      "innolitics": "(1000,XXX0)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1000,XXX1)",
+      "keyword": "RunLengthTriplet",
+      "field": "tag",
+      "dcmtk": "(1000,0011)",
+      "innolitics": "(1000,XXX1)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1000,XXX2)",
+      "keyword": "HuffmanTableSize",
+      "field": "tag",
+      "dcmtk": "(1000,0012)",
+      "innolitics": "(1000,XXX2)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1000,XXX3)",
+      "keyword": "HuffmanTableTriplet",
+      "field": "tag",
+      "dcmtk": "(1000,0013)",
+      "innolitics": "(1000,XXX3)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1000,XXX4)",
+      "keyword": "ShiftTableSize",
+      "field": "tag",
+      "dcmtk": "(1000,0014)",
+      "innolitics": "(1000,XXX4)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1000,XXX5)",
+      "keyword": "ShiftTableTriplet",
+      "field": "tag",
+      "dcmtk": "(1000,0015)",
+      "innolitics": "(1000,XXX5)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(1010,XXXX)",
+      "keyword": "ZonalMap",
+      "field": "tag",
+      "dcmtk": "(1010,0004)",
+      "innolitics": "(1010,XXXX)",
+      "note": "DCMTK lists a single representative tag where PS3.6 states a wildcard; PS3.6 used"
+    },
+    {
+      "tag": "(3004,0012)",
+      "keyword": "DoseValue",
+      "field": "retired",
+      "dcmtk": "false",
+      "innolitics": "true",
+      "note": null
+    },
+    {
+      "tag": "(5000-50FF,0005)",
+      "keyword": "CurveDimensions",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0005)",
+      "innolitics": "(50XX,0005)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0010)",
+      "keyword": "NumberOfPoints",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0010)",
+      "innolitics": "(50XX,0010)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0020)",
+      "keyword": "TypeOfData",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0020)",
+      "innolitics": "(50XX,0020)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0022)",
+      "keyword": "CurveDescription",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0022)",
+      "innolitics": "(50XX,0022)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0030)",
+      "keyword": "AxisUnits",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0030)",
+      "innolitics": "(50XX,0030)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0040)",
+      "keyword": "AxisLabels",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0040)",
+      "innolitics": "(50XX,0040)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0103)",
+      "keyword": "DataValueRepresentation",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0103)",
+      "innolitics": "(50XX,0103)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0104)",
+      "keyword": "MinimumCoordinateValue",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0104)",
+      "innolitics": "(50XX,0104)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0105)",
+      "keyword": "MaximumCoordinateValue",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0105)",
+      "innolitics": "(50XX,0105)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0106)",
+      "keyword": "CurveRange",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0106)",
+      "innolitics": "(50XX,0106)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0110)",
+      "keyword": "CurveDataDescriptor",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0110)",
+      "innolitics": "(50XX,0110)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0112)",
+      "keyword": "CoordinateStartValue",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0112)",
+      "innolitics": "(50XX,0112)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,0114)",
+      "keyword": "CoordinateStepValue",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,0114)",
+      "innolitics": "(50XX,0114)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,1001)",
+      "keyword": "CurveActivationLayer",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,1001)",
+      "innolitics": "(50XX,1001)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2000)",
+      "keyword": "AudioType",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2000)",
+      "innolitics": "(50XX,2000)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2002)",
+      "keyword": "AudioSampleFormat",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2002)",
+      "innolitics": "(50XX,2002)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2004)",
+      "keyword": "NumberOfChannels",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2004)",
+      "innolitics": "(50XX,2004)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2006)",
+      "keyword": "NumberOfSamples",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2006)",
+      "innolitics": "(50XX,2006)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2008)",
+      "keyword": "SampleRate",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2008)",
+      "innolitics": "(50XX,2008)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,200A)",
+      "keyword": "TotalTime",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,200A)",
+      "innolitics": "(50XX,200A)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,200C)",
+      "keyword": "AudioSampleData",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,200C)",
+      "innolitics": "(50XX,200C)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,200E)",
+      "keyword": "AudioComments",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,200E)",
+      "innolitics": "(50XX,200E)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2500)",
+      "keyword": "CurveLabel",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2500)",
+      "innolitics": "(50XX,2500)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2600)",
+      "keyword": "CurveReferencedOverlaySequence",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2600)",
+      "innolitics": "(50XX,2600)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,2610)",
+      "keyword": "CurveReferencedOverlayGroup",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,2610)",
+      "innolitics": "(50XX,2610)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(5000-50FF,3000)",
+      "keyword": "CurveData",
+      "field": "tag",
+      "dcmtk": "(5000-50FF,3000)",
+      "innolitics": "(50XX,3000)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0010)",
+      "keyword": "OverlayRows",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0010)",
+      "innolitics": "(60XX,0010)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0011)",
+      "keyword": "OverlayColumns",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0011)",
+      "innolitics": "(60XX,0011)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0012)",
+      "keyword": "OverlayPlanes",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0012)",
+      "innolitics": "(60XX,0012)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0015)",
+      "keyword": "NumberOfFramesInOverlay",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0015)",
+      "innolitics": "(60XX,0015)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0022)",
+      "keyword": "OverlayDescription",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0022)",
+      "innolitics": "(60XX,0022)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0040)",
+      "keyword": "OverlayType",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0040)",
+      "innolitics": "(60XX,0040)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0045)",
+      "keyword": "OverlaySubtype",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0045)",
+      "innolitics": "(60XX,0045)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0050)",
+      "keyword": "OverlayOrigin",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0050)",
+      "innolitics": "(60XX,0050)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0051)",
+      "keyword": "ImageFrameOrigin",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0051)",
+      "innolitics": "(60XX,0051)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0052)",
+      "keyword": "OverlayPlaneOrigin",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0052)",
+      "innolitics": "(60XX,0052)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0060)",
+      "keyword": "OverlayCompressionCode",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0060)",
+      "innolitics": "(60XX,0060)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0061)",
+      "keyword": "OverlayCompressionOriginator",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0061)",
+      "innolitics": "(60XX,0061)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0062)",
+      "keyword": "OverlayCompressionLabel",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0062)",
+      "innolitics": "(60XX,0062)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0063)",
+      "keyword": "OverlayCompressionDescription",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0063)",
+      "innolitics": "(60XX,0063)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0066)",
+      "keyword": "OverlayCompressionStepPointers",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0066)",
+      "innolitics": "(60XX,0066)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0068)",
+      "keyword": "OverlayRepeatInterval",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0068)",
+      "innolitics": "(60XX,0068)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0069)",
+      "keyword": "OverlayBitsGrouped",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0069)",
+      "innolitics": "(60XX,0069)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0100)",
+      "keyword": "OverlayBitsAllocated",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0100)",
+      "innolitics": "(60XX,0100)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0102)",
+      "keyword": "OverlayBitPosition",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0102)",
+      "innolitics": "(60XX,0102)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0110)",
+      "keyword": "OverlayFormat",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0110)",
+      "innolitics": "(60XX,0110)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0200)",
+      "keyword": "OverlayLocation",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0200)",
+      "innolitics": "(60XX,0200)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0800)",
+      "keyword": "OverlayCodeLabel",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0800)",
+      "innolitics": "(60XX,0800)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0802)",
+      "keyword": "OverlayNumberOfTables",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0802)",
+      "innolitics": "(60XX,0802)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0803)",
+      "keyword": "OverlayCodeTableLocation",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0803)",
+      "innolitics": "(60XX,0803)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,0804)",
+      "keyword": "OverlayBitsForCodeWord",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,0804)",
+      "innolitics": "(60XX,0804)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1001)",
+      "keyword": "OverlayActivationLayer",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1001)",
+      "innolitics": "(60XX,1001)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1100)",
+      "keyword": "OverlayDescriptorGray",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1100)",
+      "innolitics": "(60XX,1100)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1101)",
+      "keyword": "OverlayDescriptorRed",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1101)",
+      "innolitics": "(60XX,1101)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1102)",
+      "keyword": "OverlayDescriptorGreen",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1102)",
+      "innolitics": "(60XX,1102)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1103)",
+      "keyword": "OverlayDescriptorBlue",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1103)",
+      "innolitics": "(60XX,1103)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1200)",
+      "keyword": "OverlaysGray",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1200)",
+      "innolitics": "(60XX,1200)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1201)",
+      "keyword": "OverlaysRed",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1201)",
+      "innolitics": "(60XX,1201)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1202)",
+      "keyword": "OverlaysGreen",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1202)",
+      "innolitics": "(60XX,1202)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1203)",
+      "keyword": "OverlaysBlue",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1203)",
+      "innolitics": "(60XX,1203)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1301)",
+      "keyword": "ROIArea",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1301)",
+      "innolitics": "(60XX,1301)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1302)",
+      "keyword": "ROIMean",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1302)",
+      "innolitics": "(60XX,1302)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1303)",
+      "keyword": "ROIStandardDeviation",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1303)",
+      "innolitics": "(60XX,1303)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,1500)",
+      "keyword": "OverlayLabel",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,1500)",
+      "innolitics": "(60XX,1500)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,3000)",
+      "keyword": "OverlayData",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,3000)",
+      "innolitics": "(60XX,3000)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(6000-60FF,4000)",
+      "keyword": "OverlayComments",
+      "field": "tag",
+      "dcmtk": "(6000-60FF,4000)",
+      "innolitics": "(60XX,4000)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(7F00-7FFF,0010)",
+      "keyword": "VariablePixelData",
+      "field": "tag",
+      "dcmtk": "(7F00-7FFF,0010)",
+      "innolitics": "(7FXX,0010)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(7F00-7FFF,0011)",
+      "keyword": "VariableNextDataGroup",
+      "field": "tag",
+      "dcmtk": "(7F00-7FFF,0011)",
+      "innolitics": "(7FXX,0011)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(7F00-7FFF,0020)",
+      "keyword": "VariableCoefficientsSDVN",
+      "field": "tag",
+      "dcmtk": "(7F00-7FFF,0020)",
+      "innolitics": "(7FXX,0020)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(7F00-7FFF,0030)",
+      "keyword": "VariableCoefficientsSDHN",
+      "field": "tag",
+      "dcmtk": "(7F00-7FFF,0030)",
+      "innolitics": "(7FXX,0030)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    },
+    {
+      "tag": "(7F00-7FFF,0040)",
+      "keyword": "VariableCoefficientsSDDN",
+      "field": "tag",
+      "dcmtk": "(7F00-7FFF,0040)",
+      "innolitics": "(7FXX,0040)",
+      "note": "DCMTK's even-only group stride is normative (PS3.5 §7.1: odd groups are private); DCMTK used"
+    }
+  ]
+}

@@ -132,40 +132,50 @@ describe('tag ranges — the full dicom.dic grammar', () => {
     };
 
     it('parses a bare group range as EVEN only (the dictionary default)', () => {
+        // not read off the header's prose: parseTagPart in DCMTK's dcdict.cc
+        // assigns DcmDictRange_Even when no restrictor is present
         expect(range('(6000-60FF,0010)')).toEqual({
             groupLo: 0x6000,
             groupHi: 0x60ff,
-            groupParity: 'even',
+            groupStep: 2,
             elementLo: 0x0010,
             elementHi: 0x0010,
-            elementParity: 'any',
+            elementStep: 1,
         });
     });
 
-    it('parses the -o- (odd) and -u- (any) parity infixes', () => {
-        expect(range('(0009-o-FFFF,0000)').groupParity).toBe('odd');
-        expect(range('(0000-u-FFFF,0000)').groupParity).toBe('any');
+    it('parses the -o- (odd), -u- (any) and undocumented -e- infixes', () => {
+        expect(range('(0009-o-FFFF,0000)')).toMatchObject({ groupLo: 0x0009, groupStep: 2 });
+        expect(range('(0000-u-FFFF,0000)')).toMatchObject({ groupLo: 0x0000, groupStep: 1 });
+        // dcdict.cc accepts 'e' even though the dictionary header never mentions it
+        expect(range('(6000-e-60FF,0010)')).toMatchObject({ groupLo: 0x6000, groupStep: 2 });
+    });
+
+    it('raises the lower bound to the first value a range really covers', () => {
+        // (0008-o-FFFF) starts at 0009, so every covered value is lo + k * step
+        expect(range('(0008-o-FFFF,0000)')).toMatchObject({ groupLo: 0x0009, groupStep: 2 });
+        expect(range('(6001-60FF,0010)')).toMatchObject({ groupLo: 0x6002, groupStep: 2 });
     });
 
     it('parses element ranges', () => {
         expect(range('(0020,3100-31FF)')).toEqual({
             groupLo: 0x0020,
             groupHi: 0x0020,
-            groupParity: 'any',
+            groupStep: 1,
             elementLo: 0x3100,
             elementHi: 0x31ff,
-            elementParity: 'even',
+            elementStep: 2,
         });
     });
 
-    it('parses a mixed-parity range on both halves', () => {
+    it('parses a mixed-stride range on both halves', () => {
         expect(range('(0009-o-FFFF,0010-u-00FF)')).toEqual({
             groupLo: 0x0009,
             groupHi: 0xffff,
-            groupParity: 'odd',
+            groupStep: 2,
             elementLo: 0x0010,
             elementHi: 0x00ff,
-            elementParity: 'any',
+            elementStep: 1,
         });
     });
 
@@ -173,18 +183,42 @@ describe('tag ranges — the full dicom.dic grammar', () => {
         expect(range('(0010,0010)')).toEqual({
             groupLo: 0x0010,
             groupHi: 0x0010,
-            groupParity: 'any',
+            groupStep: 1,
             elementLo: 0x0010,
             elementHi: 0x0010,
-            elementParity: 'any',
+            elementStep: 1,
         });
+    });
+
+    it('parses PS3.6 wildcard notation, which spans every value not every other', () => {
+        // (60XX,0010) covers all 256 groups; DCMTK's (6000-60FF,0010) covers 128
+        expect(range('(60XX,0010)')).toMatchObject({ groupLo: 0x6000, groupHi: 0x60ff, groupStep: 1 });
+        expect(isInTagRange('(6001,0010)', range('(60XX,0010)'))).toBe(true);
+        expect(isInTagRange('(6001,0010)', range('(6000-60FF,0010)'))).toBe(false);
+    });
+
+    it('parses a wildcard over an interior nibble as a stride of 16', () => {
+        // the case a parity model cannot express: 0401, 0411, ... 04F1
+        const coefficients = range('(0028,04X1)');
+        expect(coefficients).toMatchObject({ elementLo: 0x0401, elementHi: 0x04f1, elementStep: 16 });
+        expect(isInTagRange('(0028,0401)', coefficients)).toBe(true);
+        expect(isInTagRange('(0028,0431)', coefficients)).toBe(true);
+        expect(isInTagRange('(0028,04f1)', coefficients)).toBe(true);
+        expect(isInTagRange('(0028,0402)', coefficients)).toBe(false);
+        expect(isInTagRange('(0028,0411)', coefficients)).toBe(true);
+        expect(tagRangeSize(coefficients)).toBe(16);
+    });
+
+    it('parses a wildcard spanning the whole group', () => {
+        expect(range('(1000,XXX1)')).toMatchObject({ elementLo: 0x0001, elementHi: 0xfff1, elementStep: 16 });
+        expect(range('(0000,XXXX)')).toMatchObject({ elementLo: 0x0000, elementHi: 0xffff, elementStep: 1 });
     });
 
     it.each(['60000010', '(6000-60FF)', '(60FF-6000,0010)', '(0020,31FF-3100)', '(600G-60FF,0010)', ''])('rejects %s', text => {
         expect(toTagRange(text)).toBeUndefined();
     });
 
-    it('honours group parity — the @ubercode/dcmtk#47 defect', () => {
+    it('honours the group stride — the @ubercode/dcmtk#47 defect', () => {
         const overlays = range('(6000-60FF,0010)');
         expect(isInTagRange('(6000,0010)', overlays)).toBe(true);
         expect(isInTagRange('(6002,0010)', overlays)).toBe(true);
@@ -196,7 +230,7 @@ describe('tag ranges — the full dicom.dic grammar', () => {
         expect(isInTagRange('(6000,0011)', overlays)).toBe(false);
     });
 
-    it('honours odd-only and unrestricted parity', () => {
+    it('honours odd-only and unrestricted strides', () => {
         const privateGroups = range('(0009-o-FFFF,0000)');
         expect(isInTagRange('(0009,0000)', privateGroups)).toBe(true);
         expect(isInTagRange('(0011,0000)', privateGroups)).toBe(true);
@@ -207,7 +241,7 @@ describe('tag ranges — the full dicom.dic grammar', () => {
         expect(isInTagRange('(0008,0001)', anyGroup)).toBe(false);
     });
 
-    it('honours element parity and bounds', () => {
+    it('honours the element stride and bounds', () => {
         const sourceImageIds = range('(0020,3100-31FF)');
         expect(isInTagRange('(0020,3100)', sourceImageIds)).toBe(true);
         expect(isInTagRange('(0020,31FE)', sourceImageIds)).toBe(true);
@@ -216,19 +250,32 @@ describe('tag ranges — the full dicom.dic grammar', () => {
         expect(isInTagRange('(0021,3100)', sourceImageIds)).toBe(false);
     });
 
-    it.each(['(6000-60FF,0010)', '(0009-o-FFFF,0000)', '(0000-u-FFFF,0000)', '(0020,3100-31FF)', '(0009-o-FFFF,0010-u-00FF)', '(0010,0010)'])(
-        'round-trips %s through its text form',
-        text => {
-            expect(tagRangeToString(range(text))).toBe(text);
-        }
-    );
+    it.each([
+        '(6000-60FF,0010)',
+        '(0009-o-FFFF,0000)',
+        '(0000-u-FFFF,0000)',
+        '(0020,3100-31FF)',
+        '(0009-o-FFFF,0010-u-00FF)',
+        '(0010,0010)',
+        '(0028,04X1)',
+        '(1000,XXX1)',
+    ])('round-trips %s through its text form', text => {
+        expect(tagRangeToString(range(text))).toBe(text);
+    });
+
+    it('canonicalizes a stride of 1 or 2 to DCMTK notation, which is the more precise form', () => {
+        // (60XX,0010) and (6000-u-60FF,0010) denote the identical set; the
+        // DCMTK spelling states the bounds instead of implying them
+        expect(tagRangeToString(range('(60XX,0010)'))).toBe('(6000-u-60FF,0010)');
+        expect(tagRangeToString(range('(0000,XXXX)'))).toBe('(0000,0000-u-FFFF)');
+    });
 
     it('reports the lowest covered tag as the range identity', () => {
         // the lower bound, not DCMTK's 60FF representative: 6000 is a group that
         // actually occurs in files, and it sorts correctly among its neighbours
         expect(tagRangeBase(range('(6000-60FF,0010)'))).toBe(0x60000010);
         expect(tagRangeBase(range('(0020,3100-31FF)'))).toBe(0x00203100);
-        // parity is respected when the bound itself does not match
+        // the bound is raised at parse time when it does not match the stride
         expect(tagRangeBase(range('(0008-o-FFFF,0000)'))).toBe(0x00090000);
     });
 

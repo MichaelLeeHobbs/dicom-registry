@@ -71,6 +71,36 @@
                 "default": "./dist/uid.cjs"
             }
         },
+        "./vm": {
+            "import": {
+                "types": "./dist/vm.d.ts",
+                "default": "./dist/vm.js"
+            },
+            "require": {
+                "types": "./dist/vm.d.cts",
+                "default": "./dist/vm.cjs"
+            }
+        },
+        "./vr": {
+            "import": {
+                "types": "./dist/vr.d.ts",
+                "default": "./dist/vr.js"
+            },
+            "require": {
+                "types": "./dist/vr.d.cts",
+                "default": "./dist/vr.cjs"
+            }
+        },
+        "./attributes": {
+            "import": {
+                "types": "./dist/attributes.d.ts",
+                "default": "./dist/attributes.js"
+            },
+            "require": {
+                "types": "./dist/attributes.d.cts",
+                "default": "./dist/attributes.cjs"
+            }
+        },
         "./package.json": "./package.json"
     },
     "scripts": {

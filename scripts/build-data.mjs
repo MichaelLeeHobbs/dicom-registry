@@ -13,13 +13,17 @@
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseAttributes } from './parse/attributes.mjs';
+import { parseDicomDic } from './parse/dicomDic.mjs';
 import { parseUids } from './parse/dcuid.mjs';
 import { parseTransferSyntaxes } from './parse/dcxfer.mjs';
+import { mergeAttributes } from './merge-attributes.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK_ONLY = process.argv.includes('--check');
 
 const readSource = name => readFileSync(join(ROOT, 'sources', 'dcmtk', name), 'utf8');
+const readInnolitics = name => readFileSync(join(ROOT, 'sources', 'innolitics', name), 'utf8');
 const manifest = JSON.parse(readFileSync(join(ROOT, 'sources', 'SOURCES.json'), 'utf8'));
 
 /** The DICOM edition is stated in dicom.dic's header; it is the real version of this data. */
@@ -150,6 +154,26 @@ function transferSyntaxModule(entries, provenance) {
     );
 }
 
+function attributesModule(entries, provenance) {
+    const rows = entries
+        .map(e => `    [${quote(e.tag)}, ${quote(e.keyword)}, ${quote(e.name)}, ${quote(e.vr.join(','))}, ${quote(e.vm)}, ${e.retired}, ${quote(e.standard)}, ${quote(e.sources)}],`)
+        .join('\n');
+    return tsModule(
+        `The DICOM attribute dictionary, merged from PS 3.6-${provenance.dicomEdition} (via innolitics)\nand DCMTK ${provenance.sources.find(s => s.key === 'dcmtk').ref}'s dicom.dic, by scripts/build-data.mjs.\n\n\`tag\` is kept as TEXT, not a number, because a repeating group is a range and\nonly the notation carries its stride. src/attributes.ts parses it with the same\ntoTagRange() consumers use, so there is one implementation of range semantics.`,
+        `/** One packed attribute row. */\nexport type PackedAttribute = readonly [\n    tag: string,\n    keyword: string | null,\n    name: string | null,\n    /** Comma-separated; more than one means PS3.6 leaves the VR ambiguous. */\n    vr: string,\n    vm: string | null,\n    retired: boolean,\n    standard: string,\n    sources: string,\n];\n\n/** Every attribute either source defines, ordered by tag text. */\nexport const ATTRIBUTES: readonly PackedAttribute[] = [\n${rows}\n];\n`
+    );
+}
+
+function divergencesModule(entries) {
+    const rows = entries
+        .map(e => `    [${quote(e.tag)}, ${quote(e.keyword)}, ${quote(e.field)}, ${quote(e.dcmtk)}, ${quote(e.innolitics)}, ${quote(e.note)}],`)
+        .join('\n');
+    return tsModule(
+        'Where the two attribute sources disagree, by scripts/build-data.mjs.\n\nShipped as data because the disagreements are real and a consumer may need to\nknow which reading it is getting — see scripts/merge-attributes.mjs.',
+        `/** One recorded disagreement between the sources. */\nexport type PackedDivergence = readonly [\n    tag: string,\n    keyword: string | null,\n    field: string,\n    dcmtk: string,\n    innolitics: string,\n    note: string | null,\n];\n\n/** Every field-level disagreement between dicom.dic and PS3.6. */\nexport const DIVERGENCES: readonly PackedDivergence[] = [\n${rows}\n];\n`
+    );
+}
+
 function provenanceModule(provenance) {
     return tsModule(
         'Provenance of the generated datasets.',
@@ -158,7 +182,7 @@ function provenanceModule(provenance) {
 }
 
 /** Fails the build when a parse looks degraded rather than merely changed. */
-function verify(uids, transferSyntaxes) {
+function verify(uids, transferSyntaxes, attributes) {
     const expectationsPath = join(ROOT, 'snapshots', 'expectations.json');
     const expectations = JSON.parse(readFileSync(expectationsPath, 'utf8'));
     const problems = [];
@@ -169,6 +193,28 @@ function verify(uids, transferSyntaxes) {
     };
     check('uids', uids.length, expectations.uids);
     check('transferSyntaxes', transferSyntaxes.length, expectations.transferSyntaxes);
+    check('attributes', attributes.length, expectations.attributes);
+    for (const keyword of expectations.attributes.requiredKeywords) {
+        if (!attributes.some(entry => entry.keyword === keyword)) {
+            problems.push(`attributes: required keyword '${keyword}' is missing`);
+        }
+    }
+    for (const tag of expectations.attributes.requiredRanges) {
+        if (!attributes.some(entry => entry.tag === tag)) {
+            problems.push(`attributes: required range '${tag}' is missing — repeating-group notation was flattened`);
+        }
+    }
+    // the 2019 VRs are the canary for a stale dictionary: a pre-2019 copy
+    // parses cleanly and produces a dataset that silently cannot describe them
+    for (const vr of ['SV', 'UV', 'OV']) {
+        if (!attributes.some(entry => entry.vr.includes(vr))) {
+            problems.push(`attributes: no attribute uses VR '${vr}' — the dictionary predates the 2019 edition`);
+        }
+    }
+    const ambiguous = attributes.filter(entry => entry.vr.length > 1).length;
+    if (ambiguous < expectations.attributes.minAmbiguousVr) {
+        problems.push(`attributes: only ${ambiguous} attributes keep an ambiguous VR — the merge resolved what the standard leaves open`);
+    }
     for (const keyword of expectations.uids.requiredKeywords) {
         if (!uids.some(entry => entry.keyword === keyword)) {
             problems.push(`uids: required keyword '${keyword}' is missing`);
@@ -194,18 +240,34 @@ const uidResult = parseUids(readSource('dcuid.cc'), readSource('dcuid.h'));
 const xferResult = parseTransferSyntaxes(readSource('dcxfer.cc'), readSource('dcxfer.h'), readSource('dcuid.h'));
 const { merged: transferSyntaxes, notes: mergeNotes } = mergeTransferSyntaxes(xferResult.entries, uidResult.entries);
 
-verify(uidResult.entries, transferSyntaxes);
+const dicResult = parseDicomDic(readSource('dicom.dic'));
+const attributeResult = parseAttributes(readInnolitics('attributes.json'));
+const { entries: attributes, divergences, notes: attributeNotes } = mergeAttributes(dicResult.entries, attributeResult.entries);
 
-const provenance = buildProvenance(dicomEdition(readSource('dicom.dic')), [...xferResult.notes, ...mergeNotes]);
+verify(uidResult.entries, transferSyntaxes, attributes);
+
+const provenance = buildProvenance(dicomEdition(readSource('dicom.dic')), [
+    ...xferResult.notes,
+    ...mergeNotes,
+    ...dicResult.notes,
+    ...attributeResult.notes,
+    ...attributeNotes,
+]);
 const changed = [
     emit('data/uids.json', json(dataset('uids', provenance, uidResult.entries))),
     emit('data/transfer-syntaxes.json', json(dataset('transferSyntaxes', provenance, transferSyntaxes))),
+    emit('data/attributes.json', json(dataset('attributes', provenance, attributes))),
+    emit('data/divergences.json', json(dataset('divergences', provenance, divergences))),
     emit('src/generated/uids.ts', uidsModule(uidResult.entries, provenance)),
     emit('src/generated/transferSyntaxes.ts', transferSyntaxModule(transferSyntaxes, provenance)),
+    emit('src/generated/attributes.ts', attributesModule(attributes, provenance)),
+    emit('src/generated/divergences.ts', divergencesModule(divergences)),
     emit('src/generated/provenance.ts', provenanceModule(provenance)),
 ].filter(Boolean).length;
 
-console.warn(`DICOM edition ${provenance.dicomEdition} | ${uidResult.entries.length} UIDs | ${transferSyntaxes.length} transfer syntaxes`);
+console.warn(
+    `DICOM edition ${provenance.dicomEdition} | ${uidResult.entries.length} UIDs | ${transferSyntaxes.length} transfer syntaxes | ${attributes.length} attributes | ${divergences.length} divergences`
+);
 for (const note of provenance.notes) {
     console.warn(`  note: ${note}`);
 }

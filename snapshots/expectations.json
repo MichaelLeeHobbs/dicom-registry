@@ -31,6 +31,35 @@
             "DICOMApplicationContext"
         ]
     },
+    "attributes": {
+        "minCount": 5300,
+        "minAmbiguousVr": 20,
+        "requiredKeywords": [
+            "SpecificCharacterSet",
+            "PatientName",
+            "PatientID",
+            "StudyInstanceUID",
+            "SeriesInstanceUID",
+            "SOPInstanceUID",
+            "SOPClassUID",
+            "TransferSyntaxUID",
+            "PixelData",
+            "PixelRepresentation",
+            "BitsAllocated",
+            "Rows",
+            "Columns",
+            "NumberOfFrames",
+            "ImagePositionPatient",
+            "ImageOrientationPatient",
+            "WindowCenter",
+            "LUTData",
+            "OverlayRows",
+            "ExtendedOffsetTable",
+            "PrivateCreator"
+        ],
+        "$comment-requiredRanges": "Repeating groups must survive as ranges. A build that flattens them to a single representative tag still passes every count check, so the notation itself is asserted.",
+        "requiredRanges": ["(6000-60FF,0010)", "(6000-60FF,3000)", "(0028,04X0)", "(1000,XXX0)", "(0009-o-FFFF,0010-u-00FF)"]
+    },
     "transferSyntaxes": {
         "minCount": 50,
         "requiredUids": [
