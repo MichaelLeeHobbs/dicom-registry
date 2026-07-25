@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+# Vendored upstream sources are kept verbatim so a version-bump diff stays
+# readable and provenance stays verifiable — do not normalize them.
+sources/** -text

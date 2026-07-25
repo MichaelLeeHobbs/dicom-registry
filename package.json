@@ -1,0 +1,104 @@
+{
+    "name": "@ubercode/dicom-registry",
+    "version": "0.1.0-alpha.0",
+    "description": "The DICOM registry as data: tags, UIDs, SOP classes, transfer syntaxes, private tags, VR/VM rules and de-identification actions — generated from pinned upstreams, with zero runtime dependencies.",
+    "type": "module",
+    "packageManager": "pnpm@10.33.4",
+    "sideEffects": false,
+    "engines": {
+        "node": ">=20.16"
+    },
+    "author": "Michael Hobbs",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MichaelLeeHobbs/dicom-registry.git"
+    },
+    "bugs": {
+        "url": "https://github.com/MichaelLeeHobbs/dicom-registry/issues"
+    },
+    "homepage": "https://github.com/MichaelLeeHobbs/dicom-registry#readme",
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
+    },
+    "keywords": [
+        "dicom",
+        "dicom-dictionary",
+        "data-dictionary",
+        "sop-class",
+        "transfer-syntax",
+        "uid",
+        "medical-imaging",
+        "typescript",
+        "healthcare"
+    ],
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "NOTICE"
+    ],
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./tag": {
+            "import": {
+                "types": "./dist/tag.d.ts",
+                "default": "./dist/tag.js"
+            },
+            "require": {
+                "types": "./dist/tag.d.cts",
+                "default": "./dist/tag.cjs"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "build": "tsdown",
+        "clean": "rimraf dist coverage",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "lint": "eslint --max-warnings 0 .",
+        "lint:fix": "eslint --fix --max-warnings 0 .",
+        "format": "prettier --write \"{src,tests}/**/*.{ts,md,json}\" \"*.{ts,mjs,json,md}\" \".github/**/*.yml\"",
+        "format:check": "prettier --check \"{src,tests}/**/*.{ts,md,json}\" \"*.{ts,mjs,json,md}\" \".github/**/*.yml\"",
+        "typecheck": "node node_modules/ts7/bin/tsc --noEmit",
+        "typecheck:ts6": "tsc --noEmit",
+        "sources:fetch": "node scripts/fetch-sources.mjs",
+        "data:build": "node scripts/build-data.mjs",
+        "data:diff": "node scripts/diff-data.mjs",
+        "dry-run": "npm pack --dry-run",
+        "attw": "attw --pack . --profile node16",
+        "docs": "typedoc",
+        "prepublishOnly": "pnpm run clean && pnpm run lint && pnpm run typecheck && pnpm run data:diff && pnpm run test:coverage && pnpm run build && pnpm run attw"
+    },
+    "devDependencies": {
+        "@arethetypeswrong/cli": "^0.18.5",
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^26.1.1",
+        "@vitest/coverage-v8": "^4.1.10",
+        "eslint": "^10.7.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.6",
+        "prettier": "^3.9.6",
+        "rimraf": "^6.1.3",
+        "ts7": "npm:typescript@7.0.2",
+        "tsdown": "^0.22.13",
+        "typedoc": "^0.28.20",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.65.0",
+        "unrun": "^0.3.1",
+        "vitest": "^4.1.10"
+    }
+}

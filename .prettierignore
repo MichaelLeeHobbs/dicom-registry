@@ -1,0 +1,12 @@
+dist/
+coverage/
+node_modules/
+docs-site/
+pnpm-lock.yaml
+
+# Vendored upstream inputs are kept byte-identical to their source so the
+# provenance diff stays meaningful — never reformat them.
+sources/
+
+# Generated JSON artifacts (emitted by scripts/build-data.mjs, not hand-edited).
+data/

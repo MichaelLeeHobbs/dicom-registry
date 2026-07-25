@@ -1,0 +1,50 @@
+@ubercode/dicom-registry
+Copyright (c) 2026 Michael Hobbs
+
+This product is licensed under the MIT License (see LICENSE).
+
+It contains data DERIVED FROM the third-party sources below. No upstream file is
+redistributed verbatim; every dataset shipped here is regenerated into this
+project's own normalized schema by `scripts/build-data.mjs`. The exact upstream
+revisions used for a given release are recorded in `sources/SOURCES.json` and
+stamped into every emitted dataset.
+
+--------------------------------------------------------------------------------
+1. DICOM Standard (PS3.x)
+--------------------------------------------------------------------------------
+Copyright (c) NEMA (National Electrical Manufacturers Association).
+
+The DICOM Standard is published by NEMA and is the ultimate origin of the
+factual content here: data element tags, keywords, value representations, value
+multiplicities, unique identifiers, and de-identification action codes.
+
+This project republishes those FACTS (as reorganized data), not the Standard's
+descriptive prose, figures, or tables as published. The Standard itself remains
+available from NEMA at https://dicom.nema.org/.
+
+--------------------------------------------------------------------------------
+2. DCMTK — DICOM Toolkit (OFFIS e.V.)
+--------------------------------------------------------------------------------
+Copyright (c) 1994-2026, OFFIS e.V. and contributors. All rights reserved.
+https://github.com/DCMTK/dcmtk
+
+Used as a build-time input for: the data dictionary (`dcmdata/data/dicom.dic`),
+the private tag dictionary (`dcmdata/data/private.dic`), the UID registry with
+its DCMTK aliases and SOP-class categorization (`dcmdata/libsrc/dcuid.cc`), and
+transfer syntax properties (`dcmdata/libsrc/dcxfer.cc`).
+
+DCMTK is distributed under a BSD-style licence. Its full licence text is
+reproduced in `sources/dcmtk/COPYRIGHT` alongside the vendored inputs.
+
+--------------------------------------------------------------------------------
+3. innolitics/dicom-standard
+--------------------------------------------------------------------------------
+Copyright (c) Innolitics, LLC. Licensed under the MIT License.
+https://github.com/innolitics/dicom-standard
+
+Used as a build-time input for: the attribute registry (`standard/attributes.json`)
+and the PS3.15 Annex E confidentiality profile
+(`standard/confidentiality_profile_attributes.json`).
+
+The MIT licence text is reproduced in `sources/innolitics/LICENSE` alongside the
+vendored inputs.
