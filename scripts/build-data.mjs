@@ -14,7 +14,9 @@ import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseAttributes } from './parse/attributes.mjs';
+import { parseDeidentification, OPTION_NAMES } from './parse/deident.mjs';
 import { parseDicomDic } from './parse/dicomDic.mjs';
+import { parsePrivateDic } from './parse/privateDic.mjs';
 import { parseUids } from './parse/dcuid.mjs';
 import { parseTransferSyntaxes } from './parse/dcxfer.mjs';
 import { mergeAttributes } from './merge-attributes.mjs';
@@ -106,7 +108,23 @@ function tsModule(header, body) {
         .join('\n')}\n */\n\n${body}`;
 }
 
-const quote = value => (value === null ? 'null' : `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`);
+/**
+ * Emits a JavaScript string literal.
+ *
+ * Control characters are escaped, not just quotes: PS3.15's table carries a
+ * name with an embedded newline, which produced an unterminated string in the
+ * generated module. Anything a source can contain has to survive this function.
+ */
+const quote = value => {
+    if (value === null) {
+        return 'null';
+    }
+    // JSON string syntax is a subset of JavaScript string syntax, so this is
+    // already a valid literal — and unlike hand-rolled escaping it cannot miss
+    // a case. U+2028/9 need no escaping: they are legal in JS string literals
+    // since ES2019, and the build targets es2022.
+    return JSON.stringify(String(value));
+};
 
 /**
  * Serializes a value as a JavaScript literal.
@@ -174,6 +192,30 @@ function divergencesModule(entries) {
     );
 }
 
+function privateTagsModule(entries, provenance) {
+    const rows = entries
+        .map(e => `    [${quote(e.group)}, ${quote(e.creator)}, ${quote(e.element)}, ${e.blockRelative}, ${quote(e.vr)}, ${quote(e.keyword)}, ${quote(e.vm)}],`)
+        .join('\n');
+    const creators = new Set(entries.map(e => e.creator)).size;
+    return tsModule(
+        `Private tag definitions for ${creators} vendors, from DCMTK ${provenance.sources.find(s => s.key === 'dcmtk').ref}'s\nprivate.dic, by scripts/build-data.mjs.\n\nKeyed by (group, private creator, element byte) rather than by tag: a private\ncreator reserves a BLOCK at runtime, so the same attribute appears at different\nelement numbers in different files. See src/private.ts.`,
+        `/** One packed private tag row. */\nexport type PackedPrivateTag = readonly [\n    /** Group in dictionary notation; may be an odd-only range. */\n    group: string,\n    creator: string,\n    /** Two hex digits when block-relative, four when the element is fixed. */\n    element: string,\n    blockRelative: boolean,\n    vr: string,\n    keyword: string,\n    vm: string,\n];\n\n/** Every private tag DCMTK documents, in source order. */\nexport const PRIVATE_TAGS: readonly PackedPrivateTag[] = [\n${rows}\n];\n`
+    );
+}
+
+function deidentificationModule(entries) {
+    const rows = entries
+        .map(e => {
+            const options = OPTION_NAMES.map(name => (e.options[name] === undefined ? 'null' : quote(e.options[name].source)));
+            return `    [${quote(e.tag)}, ${quote(e.name)}, ${e.inStandardIod}, ${quote(e.basicProfile.source)}, [${options.join(', ')}]],`;
+        })
+        .join('\n');
+    return tsModule(
+        'PS3.15 Annex E Table E.1-1 — de-identification actions, by scripts/build-data.mjs.\n\nThe basic profile plus all ten retained options. An implementation with only\nthe basic profile column cannot support any option, which is most real use.',
+        `/** The retained options, in PS3.15 column order. */\nexport const DEIDENTIFICATION_OPTIONS = [\n${OPTION_NAMES.map(name => `    '${name}',`).join('\n')}\n] as const;\n\n/** One packed de-identification row. Option actions are positional, null when the option says nothing. */\nexport type PackedDeidentification = readonly [\n    tag: string,\n    name: string | null,\n    inStandardIod: boolean,\n    basicProfile: string,\n    options: readonly (string | null)[],\n];\n\n/** Every attribute PS3.15 names. */\nexport const DEIDENTIFICATION: readonly PackedDeidentification[] = [\n${rows}\n];\n`
+    );
+}
+
 function provenanceModule(provenance) {
     return tsModule(
         'Provenance of the generated datasets.',
@@ -182,7 +224,7 @@ function provenanceModule(provenance) {
 }
 
 /** Fails the build when a parse looks degraded rather than merely changed. */
-function verify(uids, transferSyntaxes, attributes) {
+function verify(uids, transferSyntaxes, attributes, privateTags, deidentification) {
     const expectationsPath = join(ROOT, 'snapshots', 'expectations.json');
     const expectations = JSON.parse(readFileSync(expectationsPath, 'utf8'));
     const problems = [];
@@ -215,6 +257,24 @@ function verify(uids, transferSyntaxes, attributes) {
     if (ambiguous < expectations.attributes.minAmbiguousVr) {
         problems.push(`attributes: only ${ambiguous} attributes keep an ambiguous VR — the merge resolved what the standard leaves open`);
     }
+    check('privateTags', privateTags.length, expectations.privateTags);
+    const creators = new Set(privateTags.map(entry => entry.creator));
+    if (creators.size < expectations.privateTags.minCreators) {
+        problems.push(`privateTags: only ${creators.size} private creators — the creator column did not parse`);
+    }
+    for (const creator of expectations.privateTags.requiredCreators) {
+        if (!creators.has(creator)) {
+            problems.push(`privateTags: required private creator '${creator}' is missing`);
+        }
+    }
+    check('deidentification', deidentification.length, expectations.deidentification);
+    // an implementation that reads only the basic profile supports no option at
+    // all, so a build that lost the option columns must not pass
+    for (const option of expectations.deidentification.requiredOptions) {
+        if (!deidentification.some(entry => entry.options[option] !== undefined)) {
+            problems.push(`deidentification: no attribute carries the '${option}' option — the option columns were dropped`);
+        }
+    }
     for (const keyword of expectations.uids.requiredKeywords) {
         if (!uids.some(entry => entry.keyword === keyword)) {
             problems.push(`uids: required keyword '${keyword}' is missing`);
@@ -244,7 +304,10 @@ const dicResult = parseDicomDic(readSource('dicom.dic'));
 const attributeResult = parseAttributes(readInnolitics('attributes.json'));
 const { entries: attributes, divergences, notes: attributeNotes } = mergeAttributes(dicResult.entries, attributeResult.entries);
 
-verify(uidResult.entries, transferSyntaxes, attributes);
+const privateResult = parsePrivateDic(readSource('private.dic'));
+const deidentResult = parseDeidentification(readInnolitics('confidentiality_profile_attributes.json'));
+
+verify(uidResult.entries, transferSyntaxes, attributes, privateResult.entries, deidentResult.entries);
 
 const provenance = buildProvenance(dicomEdition(readSource('dicom.dic')), [
     ...xferResult.notes,
@@ -252,6 +315,8 @@ const provenance = buildProvenance(dicomEdition(readSource('dicom.dic')), [
     ...dicResult.notes,
     ...attributeResult.notes,
     ...attributeNotes,
+    ...privateResult.notes,
+    ...deidentResult.notes,
 ]);
 const changed = [
     emit('data/uids.json', json(dataset('uids', provenance, uidResult.entries))),
@@ -262,11 +327,16 @@ const changed = [
     emit('src/generated/transferSyntaxes.ts', transferSyntaxModule(transferSyntaxes, provenance)),
     emit('src/generated/attributes.ts', attributesModule(attributes, provenance)),
     emit('src/generated/divergences.ts', divergencesModule(divergences)),
+    emit('data/private-tags.json', json(dataset('privateTags', provenance, privateResult.entries))),
+    emit('data/deidentification.json', json(dataset('deidentification', provenance, deidentResult.entries))),
+    emit('src/generated/privateTags.ts', privateTagsModule(privateResult.entries, provenance)),
+    emit('src/generated/deidentification.ts', deidentificationModule(deidentResult.entries)),
     emit('src/generated/provenance.ts', provenanceModule(provenance)),
 ].filter(Boolean).length;
 
 console.warn(
-    `DICOM edition ${provenance.dicomEdition} | ${uidResult.entries.length} UIDs | ${transferSyntaxes.length} transfer syntaxes | ${attributes.length} attributes | ${divergences.length} divergences`
+    `DICOM edition ${provenance.dicomEdition} | ${uidResult.entries.length} UIDs | ${transferSyntaxes.length} transfer syntaxes | ` +
+        `${attributes.length} attributes | ${divergences.length} divergences | ${privateResult.entries.length} private tags | ${deidentResult.entries.length} de-id rules`
 );
 for (const note of provenance.notes) {
     console.warn(`  note: ${note}`);
