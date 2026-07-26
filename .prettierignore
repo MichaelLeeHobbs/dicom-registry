@@ -16,3 +16,9 @@ sources/
 # `typecheck` still covers them, which is the part that catches real defects.
 data/
 src/generated/
+
+# Differential fixtures are verbatim transcriptions of another project's
+# dictionary, produced by scripts/differential/extract-dictionary.mjs. They are
+# stored on one line on purpose: pretty-printing 4,898 packed tuples turns a
+# 251 KB file into megabytes of diff nobody reads.
+tests/differential/fixtures/

@@ -54,6 +54,10 @@ jobs:
             - run: pnpm run typecheck
             - run: pnpm run build
             - run: pnpm run attw
+            # the config generator runs against dist/, so it cannot be a unit
+            # test; this proves it still produces a config after an API change
+            - name: Smoke-test the association config generator
+              run: pnpm run cfg:generate | grep -c '^PresentationContext'
 
     audit:
         name: Security Audit

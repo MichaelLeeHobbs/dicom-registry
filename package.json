@@ -143,7 +143,10 @@
         "dry-run": "npm pack --dry-run",
         "attw": "attw --pack . --profile node16",
         "docs": "typedoc",
-        "prepublishOnly": "pnpm run clean && pnpm run lint && pnpm run typecheck && pnpm run sources:check && pnpm run data:check && pnpm run test:coverage && pnpm run build && pnpm run attw"
+        "prepublishOnly": "pnpm run clean && pnpm run lint && pnpm run typecheck && pnpm run sources:check && pnpm run data:check && pnpm run test:coverage && pnpm run build && pnpm run attw",
+        "cfg:generate": "node scripts/gen-storescp-cfg.mjs",
+        "differential:extract": "node scripts/differential/extract-dictionary.mjs",
+        "differential:diff": "node scripts/differential/diff-dictionary.mjs"
     },
     "devDependencies": {
         "@arethetypeswrong/cli": "^0.18.5",
