@@ -44,6 +44,9 @@ jobs:
             # recorded in sources/SOURCES.json. Catches a tampered or partially
             # updated vendor tree before any dataset is generated from it.
             - run: pnpm run sources:check
+            # Regeneration must be a no-op: proves the committed data matches the
+            # pinned inputs, which only holds because output is deterministic.
+            - run: pnpm run data:check
             - run: pnpm run format:check
             - run: pnpm run lint
             - run: pnpm run typecheck
