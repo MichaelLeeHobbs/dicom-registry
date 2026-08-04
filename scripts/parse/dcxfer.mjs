@@ -24,7 +24,7 @@ import {
     resolveBool,
     resolveEnum,
     resolveInt,
-    resolveString,
+    resolveRequiredString,
     splitTopLevel,
     stripComments,
     unwrapBraces,
@@ -68,17 +68,10 @@ function mapEnum(token, table, field) {
 }
 
 function toRecord(fields, macros, enums) {
-    const uid = resolveString(fields.xferID, macros);
-    if (uid === undefined) {
-        throw new CParseError(`xferID is not a string expression: '${fields.xferID}'`);
-    }
-    const name = resolveString(fields.xferName, macros);
     const enumToken = fields.xfer.trim();
-    const mime = resolveString(fields.mimeType, macros);
-    const extension = resolveString(fields.filenameExtension, macros);
     return {
-        uid,
-        name,
+        uid: resolveRequiredString(fields.xferID, macros, 'xferID'),
+        name: resolveRequiredString(fields.xferName, macros, 'xferName'),
         dcmtkEnum: enumToken,
         explicitVr: mapEnum(resolveEnum(fields.vrType, 'EVT_', enums), VR_TYPE, 'vrType'),
         byteOrder: mapEnum(resolveEnum(fields.byteOrder, 'EBO_', enums), BYTE_ORDER, 'byteOrder'),
@@ -90,8 +83,8 @@ function toRecord(fields, macros, enums) {
         jpegProcess12: resolveInt(fields.JPEGProcess12),
         streamCompression: mapEnum(resolveEnum(fields.streamCompression, 'ESC_', enums), STREAM_COMPRESSION, 'streamCompression'),
         status: mapEnum(resolveEnum(fields.xferValidity, 'EXV_', enums), VALIDITY, 'xferValidity'),
-        mimeType: mime,
-        filenameExtension: extension,
+        mimeType: resolveRequiredString(fields.mimeType, macros, 'mimeType'),
+        filenameExtension: resolveRequiredString(fields.filenameExtension, macros, 'filenameExtension'),
     };
 }
 
