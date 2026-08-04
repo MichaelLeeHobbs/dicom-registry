@@ -11,7 +11,11 @@ const packageJson = JSON.parse(read('package.json')) as {
 
 describe('package entry points', () => {
     it('publishes a subpath for every dataset', () => {
-        expect(Object.keys(packageJson.exports)).toEqual(['.', './tag', './uid', './vm', './vr', './attributes', './deident', './private', './package.json']);
+        // sorted: which subpaths ship is the contract, the order they are
+        // declared in is not
+        expect(Object.keys(packageJson.exports).sort()).toEqual(
+            ['.', './tag', './uid', './vm', './vr', './attributes', './deident', './private', './package.json'].sort()
+        );
     });
 
     it('keeps the private dictionary OUT of the barrel', () => {
