@@ -38,6 +38,7 @@
     "types": "./dist/index.d.ts",
     "files": [
         "dist",
+        "data",
         "NOTICE"
     ],
     "exports": {
@@ -99,6 +100,26 @@
             "require": {
                 "types": "./dist/attributes.d.cts",
                 "default": "./dist/attributes.cjs"
+            }
+        },
+        "./deident": {
+            "import": {
+                "types": "./dist/deident.d.ts",
+                "default": "./dist/deident.js"
+            },
+            "require": {
+                "types": "./dist/deident.d.cts",
+                "default": "./dist/deident.cjs"
+            }
+        },
+        "./private": {
+            "import": {
+                "types": "./dist/private.d.ts",
+                "default": "./dist/private.js"
+            },
+            "require": {
+                "types": "./dist/private.d.cts",
+                "default": "./dist/private.cjs"
             }
         },
         "./package.json": "./package.json"

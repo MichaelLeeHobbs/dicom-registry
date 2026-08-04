@@ -41,3 +41,4 @@ export * from './uid';
 export * from './vm';
 export * from './vr';
 export * from './attributes';
+export * from './deident';

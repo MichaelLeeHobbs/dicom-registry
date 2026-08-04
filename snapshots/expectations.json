@@ -60,6 +60,27 @@
         "$comment-requiredRanges": "Repeating groups must survive as ranges. A build that flattens them to a single representative tag still passes every count check, so the notation itself is asserted.",
         "requiredRanges": ["(6000-60FF,0010)", "(6000-60FF,3000)", "(0028,04X0)", "(1000,XXX0)", "(0009-o-FFFF,0010-u-00FF)"]
     },
+    "privateTags": {
+        "minCount": 2800,
+        "minCreators": 120,
+        "$comment": "A creator string is the join key for every private lookup. If the quoted column stops parsing, the row count barely moves but the creator count collapses.",
+        "requiredCreators": ["SIEMENS MEDCOM HEADER", "GEMS_IDEN_01", "Philips Imaging DD 001", "AGFA", "ACUSON"]
+    },
+    "deidentification": {
+        "minCount": 600,
+        "requiredOptions": [
+            "cleanDescriptors",
+            "cleanStructuredContent",
+            "retainLongitudinalFullDates",
+            "retainLongitudinalModifiedDates",
+            "retainUids",
+            "retainPatientCharacteristics",
+            "retainDeviceIdentity",
+            "retainInstitutionIdentity",
+            "cleanGraphics",
+            "retainSafePrivate"
+        ]
+    },
     "transferSyntaxes": {
         "minCount": 50,
         "requiredUids": [

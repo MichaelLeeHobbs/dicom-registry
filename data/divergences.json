@@ -36,7 +36,13 @@
       "PS3.6 lists (0400,0315) with no keyword, name, VR or VM; kept as an undefined retired entry",
       "PS3.6 lists (300A,0782) with no keyword, name, VR or VM; kept as an undefined retired entry",
       "attributes: 5123 rows in both sources, 220 only in dicom.dic, 6 only in PS3.6",
-      "attributes: 93 field-level disagreements between the sources, shipped as the divergences dataset"
+      "attributes: 93 field-level disagreements between the sources, shipped as the divergences dataset",
+      "private.dic:1174 has 4 columns instead of 5 (no version field); kept",
+      "PS3.15 (50XX,XXXX) (Curve Data) is a repeating group; emitted as (5000-50FF,XXXX) because odd groups are private",
+      "PS3.15 (0088,0200) carries a name with embedded line breaks; collapsed to 'Icon Image Sequence (see Note 11)'",
+      "PS3.15 (60XX,4000) (Overlay Comments) is a repeating group; emitted as (6000-60FF,4000) because odd groups are private",
+      "PS3.15 (60XX,3000) (Overlay Data) is a repeating group; emitted as (6000-60FF,3000) because odd groups are private",
+      "PS3.15 states the private-attribute row as prose ('(GGGG,EEEE) WHERE GGGG IS ODD'); emitted as (0001-o-FFFF,0000-u-FFFF)"
     ]
   },
   "count": 93,
