@@ -296,7 +296,13 @@ function parseHalf(text: string): RangeHalf | undefined {
     return parseDcmtkHalf(text) ?? parseWildcardHalf(text);
 }
 
-/** Renders a half as a wildcard when it is exactly one, else in DCMTK notation. */
+/**
+ * Renders a half in the notation that round-trips it.
+ *
+ * A single value is a plain tag half; a stride that spans whole nibbles
+ * (`step >= 16`, i.e. `60XX`) is PS3.6 wildcard notation, which is the only
+ * form that can express it; anything else is DCMTK range notation.
+ */
 function formatHalf(lo: number, hi: number, step: number): string {
     if (lo === hi && step === 1) {
         return hex4(lo);

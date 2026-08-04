@@ -82,6 +82,12 @@ function toEntry(row: PackedAttribute): AttributeEntry {
         // codec cannot read, which is a build defect, not a runtime condition
         throw new Error(`attributes: generated dictionary contains an unreadable tag '${row[0]}'`);
     }
+    const vm = row[4] === null ? null : parseVm(row[4]);
+    if (vm === undefined) {
+        // as above: `null` means PS3.6 defines no VM, so an unparseable VM is a
+        // generator defect and must not collapse into "no VM defined"
+        throw new Error(`attributes: generated dictionary contains an unreadable VM '${row[4]}' for tag '${row[0]}'`);
+    }
     return {
         id: tagRangeBase(range),
         tag: row[0],
@@ -90,7 +96,7 @@ function toEntry(row: PackedAttribute): AttributeEntry {
         keyword: row[1],
         name: row[2],
         vr: row[3] === '' ? [] : (row[3].split(',') as Vr[]),
-        vm: row[4] === null ? null : (parseVm(row[4]) ?? null),
+        vm,
         retired: row[5],
         standard: row[6] as AttributeStandard,
         sources: row[7] as AttributeSources,
