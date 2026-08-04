@@ -295,6 +295,20 @@ export function resolveString(expr, macros) {
 }
 
 /**
+ * Resolves a string field that must be string-valued — `NULL` is as much a
+ * parse failure as an unrecognized expression.
+ *
+ * @throws CParseError when the expression is not string-valued
+ */
+export function resolveRequiredString(expr, macros, field) {
+    const value = resolveString(expr, macros);
+    if (value === undefined) {
+        throw new CParseError(`${field}: expected a string literal or a string macro — got '${expr.trim().slice(0, 60)}'`);
+    }
+    return value;
+}
+
+/**
  * Resolves a string field that upstream may deliberately leave as `NULL`.
  *
  * The distinction matters: `null` means DCMTK states there is no value (a

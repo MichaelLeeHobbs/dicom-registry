@@ -25,7 +25,7 @@ import {
     resolveEnum,
     resolveFlags,
     resolveNullableString,
-    resolveString,
+    resolveRequiredString,
     splitTopLevel,
     stripComments,
     unwrapBraces,
@@ -101,12 +101,8 @@ function parseProperties(expr, fieldOrder, index) {
 
 function toRecord(fields, properties, context) {
     const { macros, enums, flagMacros } = context;
-    const uid = resolveString(fields.uid, macros);
-    if (uid === undefined) {
-        throw new CParseError(`uid is not a string expression: '${fields.uid}'`);
-    }
     return {
-        uid,
+        uid: resolveRequiredString(fields.uid, macros, 'uid'),
         // DCMTK writes NULL where no official PS3.6 keyword exists (e.g. a
         // private transfer syntax); that is data, not a parse failure
         keyword: resolveNullableString(fields.keyword, macros, 'keyword'),
