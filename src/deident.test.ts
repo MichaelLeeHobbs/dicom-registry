@@ -89,10 +89,21 @@ describe('retained options', () => {
     });
 
     it('retains device identity when asked', () => {
+        // Device Serial Number: removed under the basic profile, kept when the
+        // option is in force — the option has to change the action, not merely
+        // leave one defined
+        expect(deidentificationAction('(0018,1000)', [])?.codes).toEqual(['X', 'Z', 'D']);
+        expect(deidentificationAction('(0018,1000)', ['retainDeviceIdentity'])?.codes).toEqual(['K']);
+    });
+
+    it('leaves an attribute the device-identity option does not cover alone', () => {
+        // Institution Name is institutional, not device, identity
+        expect(deidentificationAction('(0008,0080)', ['retainDeviceIdentity'])).toEqual(deidentificationAction('(0008,0080)', []));
+    });
+
+    it('covers the device-identity option across the dataset', () => {
         const deviceRows = allDeidentification().filter(entry => entry.options.retainDeviceIdentity !== undefined);
         expect(deviceRows.length).toBeGreaterThan(40);
-        const first = deviceRows[0]!;
-        expect(deidentificationAction(first.tag.includes('-') ? '(0010,0010)' : first.tag, ['retainDeviceIdentity'])).toBeDefined();
     });
 
     it('keeps private attributes when the safe-private option is chosen', () => {
