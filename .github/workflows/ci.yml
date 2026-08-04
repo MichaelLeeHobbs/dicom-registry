@@ -3,8 +3,10 @@ name: CI
 on:
     push:
         branches: [master]
+    # every PR, not only those targeting master: work lands as stacked branches,
+    # and a stacked PR filtered out here reports "no checks" rather than failing
+    # — which reads as "nothing to fix" instead of "nothing ran"
     pull_request:
-        branches: [master]
 
 jobs:
     # The matrix verifies the LIBRARY on every Node version we support for
