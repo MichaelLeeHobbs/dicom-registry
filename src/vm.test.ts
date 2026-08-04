@@ -41,6 +41,20 @@ describe('parseVm', () => {
     it.each(['', 'n', '1-', 'many', '1-2-3', 'a-b', '1 or', '-1'])('rejects %s', text => {
         expect(parseVm(text)).toBeUndefined();
     });
+
+    // an inverted range parses cleanly under a naive reading but permits no
+    // count at all, which would make a validator reject every value silently
+    it.each(['3-1', '2-0', '10-9'])('rejects the unsatisfiable range %s', text => {
+        expect(parseVm(text)).toBeUndefined();
+    });
+
+    it('rejects a zero stride, which no count can be a multiple of', () => {
+        expect(parseVm('2-0n')).toBeUndefined();
+    });
+
+    it('still accepts a range whose ends are equal', () => {
+        expect(vm('2-2').alternatives[0]).toEqual({ min: 2, max: 2, multipleOf: 1 });
+    });
 });
 
 describe('isValidVm', () => {

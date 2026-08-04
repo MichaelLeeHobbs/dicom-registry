@@ -56,8 +56,13 @@ function parseConstraint(text: string): VmConstraint | undefined {
         return unbounded ? { min, max: null, multipleOf: 1 } : { min, max: min, multipleOf: 1 };
     }
     const value = Number.parseInt(bound, 10);
-    // `2-2n` — the bound is a stride, not a maximum
-    return unbounded ? { min, max: null, multipleOf: value } : { min, max: value, multipleOf: 1 };
+    if (unbounded) {
+        // `2-2n` — the bound is a stride, not a maximum
+        return value === 0 ? undefined : { min, max: null, multipleOf: value };
+    }
+    // `3-1` permits nothing; treat an inverted range as unreadable rather than
+    // handing a validator a constraint no count can satisfy
+    return value < min ? undefined : { min, max: value, multipleOf: 1 };
 }
 
 /**
