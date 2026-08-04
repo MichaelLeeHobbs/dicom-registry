@@ -21,6 +21,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { redactRemote } from './redact.mjs';
 
 const [, , sourcePath, outputPath] = process.argv;
 if (sourcePath === undefined || outputPath === undefined) {
@@ -49,6 +50,7 @@ function gitFact(repoDir, args) {
     }
 }
 
+
 const resolved = resolve(sourcePath);
 const source = readFileSync(resolved, 'utf8');
 const entries = {};
@@ -68,7 +70,7 @@ const fixture = {
     $comment: 'Transcribed verbatim by scripts/differential/extract-dictionary.mjs. Do not edit by hand.',
     source: {
         // repo-relative, so the fixture does not record whoever ran the script
-        remote: gitFact(repoDir, ['remote', 'get-url', 'origin']),
+        remote: redactRemote(gitFact(repoDir, ['remote', 'get-url', 'origin'])),
         path: repoRoot === null ? sourcePath.replace(/\\/g, '/') : resolved.replace(/\\/g, '/').slice(repoRoot.replace(/\\/g, '/').length + 1),
         commit: gitFact(repoDir, ['rev-parse', 'HEAD']),
         commitDate: gitFact(repoDir, ['log', '-1', '--format=%cI']),

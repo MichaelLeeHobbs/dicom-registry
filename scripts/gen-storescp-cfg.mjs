@@ -22,7 +22,10 @@
 import { writeFileSync } from 'node:fs';
 import { allTransferSyntaxes, findUids, PROVENANCE } from '../dist/uid.js';
 
-const [, , outputPath] = process.argv;
+// flags may come in any position, so the output path is the first non-flag
+// argument rather than argv[2] — otherwise `--standard-only` alone would be
+// taken as a filename and written to
+const outputPath = process.argv.slice(2).find(argument => !argument.startsWith('--'));
 
 /**
  * Transfer syntax profiles, in DCMTK's `[[TransferSyntaxes]]` form.

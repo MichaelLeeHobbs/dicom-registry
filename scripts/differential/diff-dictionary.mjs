@@ -31,6 +31,17 @@ const format = (flags.find(flag => flag.startsWith('--format=')) ?? '--format=pa
 const PACKED = /^\s*'([0-9A-Fa-f]{8})':\s*\['([^']*)',\s*'([^']*)'/;
 const KEYWORD_MAP = /^\s*([A-Za-z][A-Za-z0-9_]*)\s*:\s*'\((([0-9A-Fa-fxX]{4}),([0-9A-Fa-fxX]{4}))\)'/;
 
+/**
+ * A repeating group stored under a `50FF`/`60FF`/`7FFF` placeholder.
+ *
+ * Dictionaries of the `packed` shape key repeating groups this way and mask on
+ * lookup. The tag is not a real attribute location — every one is an ODD group,
+ * so `(60FF,0010)` is not OverlayRows — and looking it up as a number would
+ * report the whole range as missing. It is resolved by keyword instead, which
+ * checks the registry genuinely covers the range rather than merely skipping it.
+ */
+const REPRESENTATIVE = /^(50FF|60FF|7FFF)/;
+
 function readEntries(source) {
     const entries = [];
     for (const line of source.split('\n')) {
@@ -59,13 +70,20 @@ const unresolved = [];
 const keywordMismatch = [];
 const vrNarrowed = [];
 let agreed = 0;
+let viaRange = 0;
 
 for (const entry of entries) {
-    // a wildcard tag cannot be looked up as a number; resolve it by keyword
-    const ours = /[xX]/.test(entry.tag) ? lookupAttributeByKeyword(entry.keyword.replace(/^RETIRED_/, '')) : lookupAttribute(entry.tag);
+    // a wildcard tag, and a repeating-group placeholder, cannot be looked up as
+    // a number; both resolve by keyword to the range that covers them
+    const representative = REPRESENTATIVE.test(entry.tag);
+    const byKeyword = representative || /[xX]/.test(entry.tag);
+    const ours = byKeyword ? lookupAttributeByKeyword(entry.keyword.replace(/^RETIRED_/, '')) : lookupAttribute(entry.tag);
     if (ours === undefined) {
         unresolved.push(entry);
         continue;
+    }
+    if (representative) {
+        viaRange += 1;
     }
     const official = entry.keyword.replace(/^RETIRED_/, '');
     if (ours.keyword !== null && ours.keyword !== official) {
@@ -82,6 +100,7 @@ const report = [
     `format            ${format}`,
     `entries           ${entries.length}`,
     `resolved          ${agreed}`,
+    `  via range       ${viaRange}`,
     `unresolved        ${unresolved.length}`,
     `keyword differs   ${keywordMismatch.length}`,
     `VR was narrowed   ${vrNarrowed.length}`,
